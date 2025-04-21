@@ -84,17 +84,10 @@ async def get_users(session: AsyncSession = Depends(get_session)) -> UsersListRe
     users = await session.execute(select(User))
     return {"status": 200, "data": users.scalars().all()}
 
-# Получение пользователя по ID
-@router.get("/{user_id}", response_model=UserResponse)
-async def get_user(user_id: int, session: AsyncSession = Depends(get_session)) -> UserResponse:
-    user = await session.get(User, user_id)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    return {"status": 200, "data": user}
-
 # Получение информации о пользователе
 @router.get("/me", response_model=UserResponse)
 async def read_users_me(current_user: User = Depends(get_current_user)) -> UserResponse:
+    print("current_user.id:", current_user.id)
     return {"status": 200, "data": current_user}
 
 # Обновление пользователя
@@ -121,3 +114,11 @@ async def delete_user(current_user: User = Depends(get_current_user),
     await session.delete(user)
     await session.commit()
     return {"status": 200, "message": "User deleted"}
+
+# Получение пользователя по ID
+@router.get("/{user_id}", response_model=UserResponse)
+async def get_user(user_id: int, session: AsyncSession = Depends(get_session)) -> UserResponse:
+    user = await session.get(User, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {"status": 200, "data": user}

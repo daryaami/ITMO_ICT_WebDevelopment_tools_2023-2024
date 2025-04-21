@@ -19,5 +19,9 @@ app.include_router(user_router, prefix="/users", tags=["Users"])
 app.include_router(task_router, prefix="/tasks", tags=["Tasks"])
 
 @app.get("/")
-def hello():
-    return "Hello!"
+def test():
+    return {"ok": True}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="127.0.0.1", port=8000)
